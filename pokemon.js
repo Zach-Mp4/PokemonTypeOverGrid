@@ -1,6 +1,6 @@
 //returns a pokemon object from the pokeapi
 async function getPokemon(name){
-    let url = "https://pokeapi.co/api/v2/pokemon/" + name;
+    let url = "https://pokeapi.co/api/v2/pokemon/" + name.toString();
 
     let res = await fetch(url);
     let pokemon = await res.json();
@@ -41,3 +41,5 @@ function getMoves(pokemon){
 
     return moves;
 }
+
+const getImg = (pokemon) => pokemon['sprites']['front_default'];
