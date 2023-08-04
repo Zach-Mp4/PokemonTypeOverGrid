@@ -1,0 +1,55 @@
+body{
+    display: flex;
+    flex-direction: column;
+    background-color: #292929;
+    color: white;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#git-logo{
+    width: 50px; 
+    height: 50px;
+    filter:invert(100%);
+    margin-left: 95%;
+}
+
+#nav-bar{
+    width: 100%;
+    height: 5%;
+}
+
+#grid-div{
+    margin-top: 10%;
+    grid-gap: 1px;
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    height: auto;
+}
+#grid-div div{ 
+    height: 100px;
+    width: 100px;
+    display: grid;
+    place-items: center;
+}
+
+#grid-div .cell{ 
+    background-color: #a3a2a2;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+}
+
+
+#grid-div .cell:hover{ 
+    background-color: #919090;
+}
+
+#footer{
+    padding: 0px;
+    margin-top: 50px;
+    text-align: center;
+    position: absolute;
+    bottom: 0; 
+    width: 100%; 
+}
