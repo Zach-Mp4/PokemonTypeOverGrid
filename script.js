@@ -8,6 +8,7 @@ const grid = document.getElementById("grid-div");
 const inputDiv = document.getElementById("input-div");
 const sugList = document.querySelector('UL');
 const body = document.querySelector('BODY');
+const ulDiv = document.getElementById('ul-div');
 
 window.onload = async function () {
     // eevee = await getPokemon("eevee");
@@ -25,11 +26,14 @@ window.onload = async function () {
             cell = e.target;
             console.log(cell);
             grid.style.filter = 'blur(1px)';
+            ulDiv.style.height = '300px';
             input = document.createElement('input');
             input.type = 'text';
             input.setAttribute('autofocus', 'true');
             input.addEventListener('keyup', searchHandler);
+            input.placeholder = "Enter A Pokemon"
             inputDiv.prepend(input);
+            input.focus();
         }
 
          sugList.addEventListener('click', function(e) {
@@ -37,6 +41,7 @@ window.onload = async function () {
             input.value = e.target.innerText;
             cell.innerText = input.value;
             input.remove();
+            ulDiv.style.height = '0px'
             grid.style.filter = 'none';
             showSuggestions([]);
             

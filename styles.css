@@ -15,8 +15,9 @@ body{
 }
 
 #nav-bar{
-    width: 100%;
+    width: 50px;
     height: 5%;
+    margin-left: 85%;
 }
 
 #grid-div{
@@ -62,4 +63,38 @@ body{
     background-color: transparent;
     font-weight: 700;
     top: 0px;
+    position: absolute;
+    margin-top: 60px;
+}
+
+input{
+    outline: none;
+    outline: none;
+    scale: 200%;
+    border: none;
+    border-radius: 4.5px;
+    background-color: #919090;
+    margin-left: 35px;
+    position: static;
+}
+
+#ul-div{
+    width:200px;
+    height: 0px;
+    overflow-y: auto;
+}
+
+li{
+    background-color: #919090;
+    list-style-type:none;
+    text-align: center;
+    font-size: 25px;
+    width: 150px;
+    border-color: #292929;
+    border-style: solid;
+}
+
+li:hover{
+    background-color: #363636;
+    cursor: grab;
 }
