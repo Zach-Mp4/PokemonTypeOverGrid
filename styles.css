@@ -25,6 +25,8 @@ body{
     display: grid;
     grid-template-columns: repeat(4, 100px);
     height: auto;
+    position: absolute;
+    margin-right: 100px;
 }
 #grid-div div{ 
     height: 100px;
@@ -52,4 +54,12 @@ body{
     position: absolute;
     bottom: 0; 
     width: 100%; 
+}
+
+#input-div{
+    z-index: 11;
+    position: sticky;
+    background-color: transparent;
+    font-weight: 700;
+    top: 0px;
 }
