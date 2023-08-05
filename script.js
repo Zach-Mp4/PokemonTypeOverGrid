@@ -9,44 +9,13 @@ const inputDiv = document.getElementById("input-div");
 const sugList = document.querySelector('UL');
 const body = document.querySelector('BODY');
 const ulDiv = document.getElementById('ul-div');
-
+let input;
+let cell;
 window.onload = async function () {
-    // eevee = await getPokemon("eevee");
-    // fire = await getType('fire');
-    // ten = await getAbility(10);
-
-    let input;
-    let cell;
     //add event listener to show input when clicked cell
-    grid.addEventListener('click', function(e){
-        if(inputDiv.childNodes.length > 3){
-            return;
-        }
-        if(e.target.classList.contains('cell')){
-            cell = e.target;
-            console.log(cell);
-            grid.style.filter = 'blur(1px)';
-            ulDiv.style.height = '300px';
-            input = document.createElement('input');
-            input.type = 'text';
-            input.setAttribute('autofocus', 'true');
-            input.addEventListener('keyup', searchHandler);
-            input.placeholder = "Enter A Pokemon"
-            inputDiv.prepend(input);
-            input.focus();
-        }
+    grid.addEventListener('click', clickHandler);
 
-         sugList.addEventListener('click', function(e) {
-            // TODO
-            input.value = e.target.innerText;
-            cell.innerText = input.value;
-            input.remove();
-            ulDiv.style.height = '0px'
-            grid.style.filter = 'none';
-            showSuggestions([]);
-            
-        });
-    });
+    
 
 };
 
@@ -84,4 +53,39 @@ function showSuggestions(results){
 }
 
 
+async function setImg(str){
+    pkmnNum = pokemon.indexOf(str) + 1;
+    const pkmn = await getPokemon(pkmnNum);
+    return await getImg(pkmn);
+}
+
+function clickHandler(e){
+    if(inputDiv.childNodes.length > 3){
+        return;
+    }
+    if(e.target.classList.contains('cell')){
+        cell = e.target;
+        console.log(cell);
+        grid.style.filter = 'blur(1px)';
+        ulDiv.style.height = '300px';
+        input = document.createElement('input');
+        input.type = 'text';
+        input.setAttribute('autofocus', 'true');
+        input.addEventListener('keyup', searchHandler);
+        input.placeholder = "Enter A Pokemon"
+        inputDiv.prepend(input);
+        input.focus();
+    }
+
+     sugList.addEventListener('click', async function(e) {
+        input.value = 'loading...';
+        let val = e.target.innerText;
+        cell.style.backgroundImage = `url(${await setImg(val)})`;
+        input.remove();
+        ulDiv.style.height = '0px'
+        grid.style.filter = 'none';
+        showSuggestions([]);
+        
+    });
+}
 
