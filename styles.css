@@ -46,6 +46,7 @@ body{
 
 #grid-div .cell:hover{ 
     background-color: #919090;
+    cursor: pointer;
 }
 
 #footer{
