@@ -113,7 +113,12 @@ function generateGrid(){
     }
 
     for(let i = 0; i < otherHeaders.length; i++){
-        otherHeaders[i].innerText = `Pokemon that can learn the move ${moves[gridArr[i + 4].move]}`;
+        if(gridArr[i + 4].move !== null){
+            otherHeaders[i].innerText = `Pokemon that can learn the move ${moves[gridArr[i + 4].move]}`;
+        }
+        else{
+            otherHeaders[i].innerText = `Pokemon that can have the abiility ${abilities[gridArr[i + 4].ability]}`;
+        }
     }
 }
 
@@ -132,9 +137,15 @@ function generateGridArr(){
 
     }
 
-    //1 refers to abilities, 2 refers to moves
+    //1 refers to moves, 2 refers to abilities
     for (let i = 0; i < 2; i++){
-        arr.push(new header(null, null, Math.floor(Math.random() * (moves.length))));
+        let random = Math.floor(Math.random() * 2) + 1;
+        if(random === 1){
+            arr.push(new header(null, null, Math.floor(Math.random() * (moves.length))));
+        }
+        else{
+            arr.push(new header(null, Math.floor(Math.random() * abilities.length), null));
+        }
     }
     return arr;
 }
