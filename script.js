@@ -1,7 +1,3 @@
-// TEST VARIABLES
-let eevee;
-let fire;
-let ten;
 
 // HTML Elements
 const grid = document.getElementById("grid-div");
@@ -9,14 +5,23 @@ const inputDiv = document.getElementById("input-div");
 const sugList = document.querySelector('UL');
 const body = document.querySelector('BODY');
 const ulDiv = document.getElementById('ul-div');
+const header1 = document.getElementById('header1');
+const header2 = document.getElementById('header2');
+const header3 = document.getElementById('header3');
+const header4 = document.getElementById('header4');
+const header5 = document.getElementById('header5');
+const header6 = document.getElementById('header6');
+const typeHeaders = [header1, header2, header4, header5];
+const otherHeaders = [header3, header6];
+
+
+
 let input;
 let cell;
 window.onload = async function () {
     //add event listener to show input when clicked cell
+    generateGrid();
     grid.addEventListener('click', clickHandler);
-
-    
-
 };
 
 let val = '';
@@ -89,3 +94,47 @@ function clickHandler(e){
     });
 }
 
+class header{
+    constructor(type, ability, move){
+        this.type = type;
+        this.ability = ability;
+        this.move = move;
+    }
+}
+
+function generateGrid(){
+    gridArr = generateGridArr();
+
+    for(let i = 0; i < typeHeaders.length; i++){
+        let img = document.createElement('IMG');
+        img.src = getTypeImg(types[gridArr[i].type]);
+        typeHeaders[i].innerHTML = '';
+        typeHeaders[i].append(img);
+    }
+
+    for(let i = 0; i < otherHeaders.length; i++){
+        otherHeaders[i].innerText = `Pokemon that can learn the move ${moves[gridArr[i + 4].move]}`;
+    }
+}
+
+function generateGridArr(){
+    let arr = [];
+    let usedArr = [];
+    for (let i = 0; i < 4; i++){
+        let random = Math.floor(Math.random() * (types.length));
+        if(usedArr.includes(random)){
+            i--;
+        }
+        else{
+            arr.push(new header(random, null, null));
+            usedArr.push(random);
+        }
+
+    }
+
+    //1 refers to abilities, 2 refers to moves
+    for (let i = 0; i < 2; i++){
+        arr.push(new header(null, null, Math.floor(Math.random() * (moves.length))));
+    }
+    return arr;
+}

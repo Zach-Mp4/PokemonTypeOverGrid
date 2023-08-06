@@ -99,3 +99,8 @@ li:hover{
     cursor: grab;
 }
 
+div img{
+    width: 75px;
+    height: 75px;
+}
+

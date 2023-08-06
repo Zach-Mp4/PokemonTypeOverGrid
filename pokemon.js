@@ -70,3 +70,5 @@ function getPokemonMoves(pokemon){
 }
 
 const getImg = (pokemon) => pokemon['sprites']['front_default'];
+
+const getTypeImg = (type) => `pokemon-types/${type} type.ico`;
