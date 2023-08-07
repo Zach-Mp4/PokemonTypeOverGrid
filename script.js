@@ -152,19 +152,14 @@ async function generateGridArr(){
 
     let otherUsedArr = [];
     //1 refers to moves, 2 refers to abilities
-    for (let i = 0; i < 2; i++){
-        let random = Math.floor(Math.random() * 2) + 1;
-        if(random === 1){
-            let head = new header(null, null, Math.floor(Math.random() * (moves.length)));
-            arr.push(head);
-            otherUsedArr.push(head);
-        }
-        else{
-            let head = new header(null, Math.floor(Math.random() * abilities.length), null);
-            arr.push(head);
-            otherUsedArr.push(head);
-        }
-    }
+    let head = new header(null, null, Math.floor(Math.random() * (moves.length)));
+    arr.push(head);
+    otherUsedArr.push(head);
+
+    let head2 = new header(null, Math.floor(Math.random() * abilities.length), null);
+    arr.push(head2);
+    otherUsedArr.push(head2);
+    
     usedTypes = convertUsedTypes(usedArr);
     if(checkTypeValidity(usedTypes)){
         return generateGridArr();
@@ -175,19 +170,13 @@ async function generateGridArr(){
         arr.splice(4, 1);
         arr.splice(4, 1);
         otherUsedArr = [];
-        for (let i = 0; i < 2; i++){
-            let random = Math.floor(Math.random() * 2) + 1;
-            if(random === 1){
-                let head = new header(null, null, Math.floor(Math.random() * (moves.length)));
-                arr.push(head);
-                otherUsedArr.push(head);
-            }
-            else{
-                let head = new header(null, Math.floor(Math.random() * abilities.length), null);
-                arr.push(head);
-                otherUsedArr.push(head);
-            }
-        }
+        let head = new header(null, null, Math.floor(Math.random() * (moves.length)));
+        arr.push(head);
+        otherUsedArr.push(head);
+
+        let head2 = new header(null, Math.floor(Math.random() * abilities.length), null);
+        arr.push(head2);
+        otherUsedArr.push(head2);
         test = await checkMAValidity(otherUsedArr, usedTypes);
     }
     title.innerText = '';
