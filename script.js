@@ -20,6 +20,9 @@ let input;
 let cell;
 window.onload = async function () {
     //add event listener to show input when clicked cell
+    if(screen.width < 500){
+        body.style.scale = 0.7;
+    }
     generateGrid();    
     grid.addEventListener('click', clickHandler);
 };
