@@ -25,7 +25,7 @@ window.onload = async function () {
     if(screen.width < 500){
         body.style.scale = 0.7;
     }
-    generateGrid();    
+    await generateGrid();    
     grid.addEventListener('click', clickHandler);
 };
 
@@ -171,8 +171,24 @@ async function generateGridArr(){
     }
     title.innerText = 'LOADING...';
     test = await checkMAValidity(otherUsedArr, usedTypes);
-    if(test){
-        return generateGridArr();
+    while(test){
+        arr.splice(4, 1);
+        arr.splice(4, 1);
+        otherUsedArr = [];
+        for (let i = 0; i < 2; i++){
+            let random = Math.floor(Math.random() * 2) + 1;
+            if(random === 1){
+                let head = new header(null, null, Math.floor(Math.random() * (moves.length)));
+                arr.push(head);
+                otherUsedArr.push(head);
+            }
+            else{
+                let head = new header(null, Math.floor(Math.random() * abilities.length), null);
+                arr.push(head);
+                otherUsedArr.push(head);
+            }
+        }
+        test = await checkMAValidity(otherUsedArr, usedTypes);
     }
     title.innerText = '';
 
