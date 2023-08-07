@@ -155,7 +155,7 @@ function generateGridArr(){
     }
     usedTypes = convertUsed(usedArr);
     if(checkTypeValidity(usedTypes)){
-        generateGridArr();
+        return generateGridArr();
     }
     return arr;
 }
