@@ -11,6 +11,8 @@ const header3 = document.getElementById('header3');
 const header4 = document.getElementById('header4');
 const header5 = document.getElementById('header5');
 const header6 = document.getElementById('header6');
+const title = document.querySelector('H1');
+
 const typeHeaders = [header1, header2, header4, header5];
 const otherHeaders = [header3, header6];
 const cell5 = document.getElementById('cell5');
@@ -111,8 +113,8 @@ class header{
     }
 }
 
-function generateGrid(){
-    gridArr = generateGridArr();
+async function generateGrid(){
+    gridArr = await generateGridArr();
 
     for(let i = 0; i < typeHeaders.length; i++){
         let img = document.createElement('IMG');
@@ -131,8 +133,9 @@ function generateGrid(){
     }
 }
 
+let test;
 let usedTypes = [];
-function generateGridArr(){
+async function generateGridArr(){
     let arr = [];
     let usedArr = [];
     for (let i = 0; i < 4; i++){
@@ -147,24 +150,33 @@ function generateGridArr(){
 
     }
 
+    let otherUsedArr = [];
     //1 refers to moves, 2 refers to abilities
     for (let i = 0; i < 2; i++){
         let random = Math.floor(Math.random() * 2) + 1;
         if(random === 1){
-            arr.push(new header(null, null, Math.floor(Math.random() * (moves.length))));
+            let head = new header(null, null, Math.floor(Math.random() * (moves.length)));
+            arr.push(head);
+            otherUsedArr.push(head);
         }
         else{
-            arr.push(new header(null, Math.floor(Math.random() * abilities.length), null));
+            let head = new header(null, Math.floor(Math.random() * abilities.length), null);
+            arr.push(head);
+            otherUsedArr.push(head);
         }
     }
-    usedTypes = convertUsed(usedArr);
+    usedTypes = convertUsedTypes(usedArr);
     if(checkTypeValidity(usedTypes)){
+        return generateGridArr();
+    }
+    test = await checkMAValidity(otherUsedArr, usedTypes);
+    if(test){
         return generateGridArr();
     }
     return arr;
 }
 
-function convertUsed(arr){
+function convertUsedTypes(arr){
     let toString = [];
     for (let type of arr){
         toString.push(types[type]);
@@ -178,6 +190,55 @@ function checkTypeValidity(arr){
     }
     else{
         return false;
+    }
+}
+
+//M stands for move, A stands for ability
+async function checkMAValidity(arr, usedTypes){
+    for(let i = 0; i < arr.length; i++){
+        if(arr[i].move !== null){
+            let move = await getMove(moves[arr[i].move]);
+            title.innerText = 'LOADING...';
+            //make an array holding all the pokemon that can learn that move
+            let learnPKMN = [];
+            for (let pkmn of move['learned_by_pokemon']){
+                learnPKMN.push(pkmn.name);
+            }
+
+            //make an array of all the types of the pokemon in the learnPKMN array
+            let learnTypes = [];
+            for (let pkmn of learnPKMN){
+                let curTypes = [];
+                let curpkmn = await getPokemon(pkmn);
+                for(let type of curpkmn['types']){
+                    if(learnTypes.includes(type['type']['name']) === false){
+                        curTypes.push(type['type']['name']);
+                    }
+                }
+                learnTypes.push(...curTypes);
+            }
+            
+            if (i == 0){
+                for (let j = 2; j <= 3; j++){
+                    if(learnTypes.includes(usedTypes[j].toLowerCase()) === false){
+                        title.innerText = '';
+                        //console.log(`checking ${learnTypes} for ${usedTypes[j]}`);
+                        return true;
+                    }
+                }
+            }
+            else{
+                for (let j = 0; j <= 1; j++){
+                    if(learnTypes.includes(usedTypes[j].toLowerCase()) === false){
+                        title.innerText = '';
+                        //console.log(`checking ${learnTypes} for ${usedTypes[j]}`);
+                        return true;
+                    }
+                }
+            }
+            title.innerText = '';
+
+        }
     }
 }
 
