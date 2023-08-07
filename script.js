@@ -130,6 +130,7 @@ function generateGrid(){
         }
     }
 }
+
 let usedTypes = [];
 function generateGridArr(){
     let arr = [];
