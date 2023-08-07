@@ -13,14 +13,14 @@ const header5 = document.getElementById('header5');
 const header6 = document.getElementById('header6');
 const typeHeaders = [header1, header2, header4, header5];
 const otherHeaders = [header3, header6];
-
+const cell5 = document.getElementById('cell5');
 
 
 let input;
 let cell;
 window.onload = async function () {
     //add event listener to show input when clicked cell
-    generateGrid();
+    generateGrid();    
     grid.addEventListener('click', clickHandler);
 };
 
@@ -59,9 +59,15 @@ function showSuggestions(results){
 
 
 async function setImg(str){
-    pkmnNum = pokemon.indexOf(str) + 1;
-    const pkmn = await getPokemon(pkmnNum);
-    return await getImg(pkmn);
+    try{
+        const pkmn = await getPokemon(str);
+        return await getImg(pkmn);
+    }
+    catch{
+        let pkmnNum = pokemon.indexOf(str) + 1;
+        const pkmn = await getPokemon(pkmnNum);
+        return await getImg(pkmn);
+    }
 }
 
 function clickHandler(e){
@@ -117,11 +123,11 @@ function generateGrid(){
             otherHeaders[i].innerText = `Pokemon that can learn the move ${moves[gridArr[i + 4].move]}`;
         }
         else{
-            otherHeaders[i].innerText = `Pokemon that can have the abiility ${abilities[gridArr[i + 4].ability]}`;
+            otherHeaders[i].innerText = `Pokemon that can have the ability ${abilities[gridArr[i + 4].ability]}`;
         }
     }
 }
-
+let usedTypes = [];
 function generateGridArr(){
     let arr = [];
     let usedArr = [];
@@ -147,5 +153,34 @@ function generateGridArr(){
             arr.push(new header(null, Math.floor(Math.random() * abilities.length), null));
         }
     }
+    usedTypes = convertUsed(usedArr);
+    if(checkTypeValidity(usedTypes)){
+        generateGridArr();
+    }
     return arr;
 }
+
+function convertUsed(arr){
+    let toString = [];
+    for (let type of arr){
+        toString.push(types[type]);
+    }
+    return toString;
+}
+
+function checkTypeValidity(arr){
+    if((arr.includes('Normal') && arr.includes('Ice')) || (arr.includes('Normal') && arr.includes('Bug')) || (arr.includes('Normal') && arr.includes('Rock')) || (arr.includes('Normal') && arr.includes('Steel')) || (arr.includes('Fire') && arr.includes('Fairy')) || (arr.includes('Ice') && arr.includes('Poison')) || (arr.includes('Ground') && arr.includes('Fairy')) || (arr.includes('Bug') && arr.includes('Dragon')) || (arr.includes('Rock') && arr.includes('Ghost'))){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+//remember for these pokemon to have a try using the name when checking for the correctness
+//if it doesnt work use the index + 1 !!!
+// async function addForms(){
+//     for (let i = 10001; i <= 10271; i++){
+//         pokemon.push(getName(await getPokemon(i)));
+//     }
+// }
