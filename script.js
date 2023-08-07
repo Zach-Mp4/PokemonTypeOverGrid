@@ -169,10 +169,13 @@ async function generateGridArr(){
     if(checkTypeValidity(usedTypes)){
         return generateGridArr();
     }
+    title.innerText = 'LOADING...';
     test = await checkMAValidity(otherUsedArr, usedTypes);
     if(test){
         return generateGridArr();
     }
+    title.innerText = '';
+
     return arr;
 }
 
@@ -198,7 +201,7 @@ async function checkMAValidity(arr, usedTypes){
     for(let i = 0; i < arr.length; i++){
         if(arr[i].move !== null){
             let move = await getMove(moves[arr[i].move]);
-            title.innerText = 'LOADING...';
+            console.log(`checking move: ${moves[arr[i].move]}`);
             //make an array holding all the pokemon that can learn that move
             let learnPKMN = [];
             for (let pkmn of move['learned_by_pokemon']){
@@ -217,29 +220,78 @@ async function checkMAValidity(arr, usedTypes){
                 }
                 learnTypes.push(...curTypes);
             }
+
+            console.log('hi');
             
-            if (i == 0){
+            if (i === 0){
                 for (let j = 2; j <= 3; j++){
+                    console.log(`checking ${learnTypes} for ${usedTypes[j]}`);
                     if(learnTypes.includes(usedTypes[j].toLowerCase()) === false){
-                        title.innerText = '';
-                        //console.log(`checking ${learnTypes} for ${usedTypes[j]}`);
+                        console.log("FALSE!!");
                         return true;
                     }
                 }
             }
             else{
                 for (let j = 0; j <= 1; j++){
+                    console.log(`checking ${learnTypes} for ${usedTypes[j]}`);
                     if(learnTypes.includes(usedTypes[j].toLowerCase()) === false){
-                        title.innerText = '';
-                        //console.log(`checking ${learnTypes} for ${usedTypes[j]}`);
+                        console.log("FALSE!!");
                         return true;
                     }
                 }
             }
-            title.innerText = '';
+
+        }
+
+        else{
+            let ability = await getAbility(abilities[arr[i].ability]);
+            //console.log(`checking ability: ${abilities[arr[i].ability]}`);
+
+            //make an array holding all the pokemon that can have that ability
+            let havePKMN = [];
+            for (let pkmn of ability['pokemon']){
+                havePKMN.push(pkmn.pokemon.name);
+            }
+
+            //make an array of all the types of the pokemon in the havePKMN array
+            let haveTypes = [];
+            for (let pkmn of havePKMN){
+                let curTypes = [];
+                let curpkmn = await getPokemon(pkmn);
+                for(let type of curpkmn['types']){
+                    if(haveTypes.includes(type['type']['name']) === false){
+                        curTypes.push(type['type']['name']);
+                    }
+                }
+                haveTypes.push(...curTypes);
+            }
+
+
+            if (i === 0){
+                for (let j = 2; j <= 3; j++){
+                    console.log(`checking ${haveTypes} for ${usedTypes[j]}`);
+                    if(haveTypes.includes(usedTypes[j].toLowerCase()) === false){
+                        console.log("FALSE!!");
+                        return true;
+                    }
+                }
+            }
+            else{
+                for (let j = 0; j <= 1; j++){
+                    console.log(`checking ${haveTypes} for ${usedTypes[j]}`);
+                    if(haveTypes.includes(usedTypes[j].toLowerCase()) === false){
+                        console.log("FALSE!!");
+                        return true;
+                    }
+                }
+            }
+
 
         }
     }
+
+    return false;
 }
 
 //remember for these pokemon to have a try using the name when checking for the correctness
