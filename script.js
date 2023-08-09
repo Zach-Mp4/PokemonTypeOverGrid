@@ -149,37 +149,15 @@ async function generateGridArr(){
         }
 
     }
-
-    let otherUsedArr = [];
-    //1 refers to moves, 2 refers to abilities
-    let head = new header(null, null, Math.floor(Math.random() * (moves.length)));
-    arr.push(head);
-    otherUsedArr.push(head);
-
-    let head2 = new header(null, Math.floor(Math.random() * abilities.length), null);
-    arr.push(head2);
-    otherUsedArr.push(head2);
     
     usedTypes = convertUsedTypes(usedArr);
     if(checkTypeValidity(usedTypes)){
         return generateGridArr();
     }
-    title.innerText = 'LOADING...';
-    test = await checkMAValidity(otherUsedArr, usedTypes);
-    while(test){
-        arr.splice(4, 1);
-        arr.splice(4, 1);
-        otherUsedArr = [];
-        let head = new header(null, null, Math.floor(Math.random() * (moves.length)));
-        arr.push(head);
-        otherUsedArr.push(head);
 
-        let head2 = new header(null, Math.floor(Math.random() * abilities.length), null);
-        arr.push(head2);
-        otherUsedArr.push(head2);
-        test = await checkMAValidity(otherUsedArr, usedTypes);
-    }
-    title.innerText = '';
+    let otherHeaders = await generateOthers(usedTypes);
+
+    arr = [...arr, ...otherHeaders];
 
     return arr;
 }
@@ -201,103 +179,67 @@ function checkTypeValidity(arr){
     }
 }
 
-//M stands for move, A stands for ability
-async function checkMAValidity(arr, usedTypes){
-    for(let i = 0; i < arr.length; i++){
-        if(arr[i].move !== null){
-            let move = await getMove(moves[arr[i].move]);
-            console.log(`checking move: ${moves[arr[i].move]}`);
-            //make an array holding all the pokemon that can learn that move
-            let learnPKMN = [];
-            for (let pkmn of move['learned_by_pokemon']){
-                learnPKMN.push(pkmn.name);
+async function generateOthers(usedTypes){
+    //generate a move
+    let headers = [null, null];
+    let types = [usedTypes[2].toLowerCase(), usedTypes[3].toLowerCase()];
+    
+    let pkmn = [];
+    let curType = await getType(types[0]);
+    for (let pokemon of curType['pokemon']){
+       pkmn.push(await getPokemon(pokemon['pokemon']['name'])); 
+    }
+    
+    let move = await genMove(pkmn, types[1]);
+    headers[0] = new header(null, null, move);
+
+    //generate a move
+    types = [usedTypes[0].toLowerCase(), usedTypes[1].toLowerCase()];
+    
+    pkmn = [];
+    lcurType = await getType(types[0]);
+    for (let pokemon of curType['pokemon']){
+       pkmn.push(await getPokemon(pokemon['pokemon']['name'])); 
+    }
+    
+    move = await genMove(pkmn, types[1]);
+    headers[1] = new header(null, null, move);
+
+    return headers;
+}
+
+async function genMove(pkmn, type){
+    for (let pokemon of pkmn){
+        for (let move of pokemon['moves']){
+            let curmove = await getMove(move['move']['name']);
+            if(curmove['type']['name'] === type){
+                return moves.indexOf(curmove['name']);
             }
-
-            //make an array of all the types of the pokemon in the learnPKMN array
-            let learnTypes = [];
-            for (let pkmn of learnPKMN){
-                let curTypes = [];
-                let curpkmn = await getPokemon(pkmn);
-                for(let type of curpkmn['types']){
-                    if(learnTypes.includes(type['type']['name']) === false){
-                        curTypes.push(type['type']['name']);
-                    }
-                }
-                learnTypes.push(...curTypes);
-            }
-
-            console.log('hi');
-            
-            if (i === 0){
-                for (let j = 2; j <= 3; j++){
-                    console.log(`checking ${learnTypes} for ${usedTypes[j]}`);
-                    if(learnTypes.includes(usedTypes[j].toLowerCase()) === false){
-                        console.log("FALSE!!");
-                        return true;
-                    }
-                }
-            }
-            else{
-                for (let j = 0; j <= 1; j++){
-                    console.log(`checking ${learnTypes} for ${usedTypes[j]}`);
-                    if(learnTypes.includes(usedTypes[j].toLowerCase()) === false){
-                        console.log("FALSE!!");
-                        return true;
-                    }
-                }
-            }
-
-        }
-
-        else{
-            let ability = await getAbility(abilities[arr[i].ability]);
-            //console.log(`checking ability: ${abilities[arr[i].ability]}`);
-
-            //make an array holding all the pokemon that can have that ability
-            let havePKMN = [];
-            for (let pkmn of ability['pokemon']){
-                havePKMN.push(pkmn.pokemon.name);
-            }
-
-            //make an array of all the types of the pokemon in the havePKMN array
-            let haveTypes = [];
-            for (let pkmn of havePKMN){
-                let curTypes = [];
-                let curpkmn = await getPokemon(pkmn);
-                for(let type of curpkmn['types']){
-                    if(haveTypes.includes(type['type']['name']) === false){
-                        curTypes.push(type['type']['name']);
-                    }
-                }
-                haveTypes.push(...curTypes);
-            }
-
-
-            if (i === 0){
-                for (let j = 2; j <= 3; j++){
-                    console.log(`checking ${haveTypes} for ${usedTypes[j]}`);
-                    if(haveTypes.includes(usedTypes[j].toLowerCase()) === false){
-                        console.log("FALSE!!");
-                        return true;
-                    }
-                }
-            }
-            else{
-                for (let j = 0; j <= 1; j++){
-                    console.log(`checking ${haveTypes} for ${usedTypes[j]}`);
-                    if(haveTypes.includes(usedTypes[j].toLowerCase()) === false){
-                        console.log("FALSE!!");
-                        return true;
-                    }
-                }
-            }
-
-
         }
     }
-
-    return false;
 }
+
+// async function genAbility(pAbilities, type){
+//     let possibleAbilities = [];
+//     let pkmn = [];
+//     curType = await getType(type);
+//     for (let pokemon of curType['pokemon']){
+//        pkmn.push(await getPokemon(pokemon['pokemon']['name'])); 
+//     }
+//     for (let pokemon of pkmn){
+//         for (let ability of pokemon['abilities']){
+//             possibleAbilities.push(ability['ability']['name']);
+//         }
+//     }
+
+//     for (let ability of pAbilities){
+//         if(possibleAbilities.includes(ability)){
+//             return new header(null, abilities.indexOf(ability), null);
+//         }
+//     }
+// }
+//M stands for move, A stands for ability
+
 
 //remember for these pokemon to have a try using the name when checking for the correctness
 //if it doesnt work use the index + 1 !!!
