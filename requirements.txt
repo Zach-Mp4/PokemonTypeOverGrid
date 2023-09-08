@@ -1,6 +1,6 @@
 blinker==1.6.2
 click==8.1.7
-Flask==2.3.3
+Flask==2.2.5
 Flask-DebugToolbar==0.13.1
 gunicorn==21.2.0
 importlib-metadata==6.8.0
