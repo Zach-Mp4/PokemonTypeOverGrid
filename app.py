@@ -20,7 +20,8 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
 
     def load(self):
         return self.application
-
+standalone = StandaloneApplication(app)
+standalone.run()
 
 @app.route('/')
 def start():
